@@ -110,13 +110,11 @@ class App extends Component {
     var pMap = items.map(x => {
       return (
         <tr>
-          <td>{x.account_sid}</td>
           <td>{x.created_by}</td>
           <td>{x.date_created}</td>
           <td>{x.date_updated}</td>
           <td><p style={{color:'blue',cursor:'pointer'}} onClick={this.logOut.bind(this,x.links.items)}>links:{x.links.items}</p></td>
           <td>{x.revision}</td>
-          <td>{x.service_sid}</td>
           <td>{x.unique_name}</td>
           <td>{x.url}</td>
           <td><button style={{color:'red'}} onClick={this.deleteMap.bind(this,`https://preview.twilio.com/Sync/Services/${this.state.serviceId}/Maps/${x.unique_name}`)}>delete</button></td>
@@ -133,13 +131,11 @@ class App extends Component {
         <table className="table table-striped">
           <thead>
             <tr>
-              <th>account id</th>
               <th>created by</th>
               <th>date created</th>
               <th>date updated</th>
               <th>item link</th>
               <th>revision</th>
-              <th>service sid</th>
               <th>unique name</th>
               <th>url</th>
               <th>delete</th>
