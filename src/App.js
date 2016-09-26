@@ -14,31 +14,44 @@ class App extends Component {
     this.logOut = this.logOut.bind(this)
     this.onSub = this.onSub.bind(this)
     this.deleteMap = this.deleteMap.bind(this)
-    this.onTokenChange = this.onTokenChange.bind(this)
+    this.onUserChange = this.onUserChange.bind(this)
+    this.onPassChange = this.onPassChange.bind(this)
     this.onServiceChange = this.onServiceChange.bind(this)
   }
-  componentDidMount() {
 
+  onUserChange(event) {
+    this.setState({username:event.target.value})
   }
-  onTokenChange(event) {
-    this.setState({token:event.target.value})
+
+  onPassChange(event) {
+    this.setState({password:event.target.value})
   }
+
   onServiceChange(event) {
     this.setState({serviceId:event.target.value})
   }
+
   onSub() {
+    const hash = new Buffer(`${this.state.username}:${this.state.password}`).toString('base64')
+    this.setState({token:hash})
     fetch(`https://preview.twilio.com/Sync/Services/${this.state.serviceId}/Maps`,{
       headers: {
-        'Authorization':`Basic ${this.state.token}`
+        'Authorization':`Basic ${hash}`
       }
     })
     .then(function(response) {
+
       return response.text()
+
     }).then(function(body) {
+
       this.setState({'items':JSON.parse(body).maps})
+
     }.bind(this))
   }
+
   deleteMap(url) {
+
    fetch(url,{
     method:'DELETE',
     headers: {
@@ -46,20 +59,30 @@ class App extends Component {
     }
   }) 
    .then(function(res) {
+
     this.onSub()
+
   }.bind(this))
+
  }
+
  logOut(url) {
+
   fetch(url,{
     headers: {
       'Authorization':`Basic ${this.state.token}`
     }
   })
   .then(function(response) {
+
     return response.text()
+
   }).then(function(body) {
+
     var newObj = JSON.parse(body);
+
     var newMap = newObj.items.map(x => {
+
       var newObj = {
 
       }
@@ -70,42 +93,68 @@ class App extends Component {
   }.bind(this))  }
 
   render() {
-    var blah = this.state.items
+    var items = this.state.items
     var details = this.state.details;
     var arr = details.map((x) => {
       for(var i in x) {
         return(<p>{i}:{x[i] ? x[i].toString() : 'False'}</p>)
       }
     })
-    var pMap = blah.map(x => {
+
+    if(arr.length === 0) {
+
+      arr = <p>No items in this map</p>
+
+    }
+
+    var pMap = items.map(x => {
       return (
-        <div>
-        <p>accountId:{x.account_sid}</p>
-        <p>created_by:{x.created_by}</p>
-        <p>date_created:{x.date_created}</p>
-        <p>date_updated:{x.date_updated}</p>
-        <p style={{color:'blue',cursor:'pointer'}} onClick={this.logOut.bind(this,x.links.items)}>links:{x.links.items}</p>
-        <p>revision:{x.revision}</p>
-        <p>service_sid:{x.service_sid}</p>
-        <p>unique_name:{x.unique_name}</p>
-        <p>url:{x.url}</p>
-        <button style={{color:'red'}} onClick={this.deleteMap.bind(this,`https://preview.twilio.com/Sync/Services/${this.state.serviceId}/Maps/${x.unique_name}`)}>delete</button>
-        <hr/>
-        <hr/>
-        </div>
-        )
-    })
+        <tr>
+          <td>{x.account_sid}</td>
+          <td>{x.created_by}</td>
+          <td>{x.date_created}</td>
+          <td>{x.date_updated}</td>
+          <td><p style={{color:'blue',cursor:'pointer'}} onClick={this.logOut.bind(this,x.links.items)}>links:{x.links.items}</p></td>
+          <td>{x.revision}</td>
+          <td>{x.service_sid}</td>
+          <td>{x.unique_name}</td>
+          <td>{x.url}</td>
+          <td><button style={{color:'red'}} onClick={this.deleteMap.bind(this,`https://preview.twilio.com/Sync/Services/${this.state.serviceId}/Maps/${x.unique_name}`)}>delete</button></td>
+        </tr>
+        )})
+
     return (
       <div>
-      Token:<input type="text" onChange={this.onTokenChange}></input>
-      ServiceId:<input type="text" onChange={this.onServiceChange}></input>
-      <button onClick={this.onSub}>Add Credentials</button>
-      <div style={{borderStyle:'solid',height:'700px',float:'left',width:'45%',overflow:'scroll'}}>
-      {pMap}
+        username:<input type="text" onChange={this.onUserChange}></input>
+        password:<input type="text" onChange={this.onPassChange}></input>
+        serviceid:<input type="text" onChange={this.onServiceChange}></input>
+        <button onClick={this.onSub}>Add Credentials</button>
+      <div style={{height:'700px',width:'100%',float:'left',overflow:'scroll'}}>
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>account id</th>
+              <th>created by</th>
+              <th>date created</th>
+              <th>date updated</th>
+              <th>item link</th>
+              <th>revision</th>
+              <th>service sid</th>
+              <th>unique name</th>
+              <th>url</th>
+              <th>delete</th>
+            </tr>
+          </thead>
+          <tbody>
+          {pMap}
+          </tbody>
+        </table>
       </div>
-      <div style={{float:'right',borderStyle:'solid',width:'45%',overflow:'scroll'}}>
-      {arr}
+      <h1>Details</h1>
+      <div style={{marginTop:'20px',width:'100%',overflow:'scroll'}}>
+        {arr}
       </div>
+      
       </div>
       );
   }
