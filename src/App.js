@@ -14,6 +14,7 @@ class App extends Component {
     this.logOut = this.logOut.bind(this)
     this.onSub = this.onSub.bind(this)
     this.deleteMap = this.deleteMap.bind(this)
+    this.deleteAll = this.deleteAll.bind(this)
     this.onUserChange = this.onUserChange.bind(this)
     this.onPassChange = this.onPassChange.bind(this)
     this.onServiceChange = this.onServiceChange.bind(this)
@@ -65,6 +66,11 @@ class App extends Component {
   }.bind(this))
 
  }
+  deleteAll(urlArr) {
+    urlArr.forEach(x => {
+      this.deleteMap(x)
+    })
+ }
 
  logOut(url) {
 
@@ -106,7 +112,10 @@ class App extends Component {
       arr = <p>No items in this map</p>
 
     }
-
+let urlMap = items.map(x => {
+    return `https://preview.twilio.com/Sync/Services/${this.state.serviceId}/Maps/${x.unique_name}`
+});
+let deleteAllButton = <button style={{color:'red'}} onClick={this.deleteAll.bind(this,urlMap)}>delete all</button>
     var pMap = items.map(x => {
       return (
         <tr>
@@ -127,6 +136,7 @@ class App extends Component {
         password:<input type="text" onChange={this.onPassChange}></input>
         serviceid:<input type="text" onChange={this.onServiceChange}></input>
         <button onClick={this.onSub}>Add Credentials</button>
+        {deleteAllButton}
       <div style={{height:'700px',width:'100%',float:'left',overflow:'scroll'}}>
         <table className="table table-striped">
           <thead>
