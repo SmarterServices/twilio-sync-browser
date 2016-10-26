@@ -188,11 +188,10 @@ logOut(url) {
           <td>{x.date_created}</td>
           <td>{x.date_updated}</td>
           <td>
-            <p style={{color:'blue',cursor:'pointer'}} onClick={this.logOut.bind(this,x.links.items)}>links:{x.links.items}</p>
+            <p style={{color:'blue',cursor:'pointer'}} onClick={this.logOut.bind(this,x.links.items)}>links:{x.links.items.split('/')[7]}</p>
           </td>
           <td>{x.revision}</td>
           <td>{x.unique_name}</td>
-          <td>{x.url}</td>
           <td><button style={{color:'red'}} onClick={this.deleteMap.bind(this,`https://preview.twilio.com/Sync/Services/${this.state.serviceId}/Maps/${x.unique_name}`)}>delete</button></td>
         </tr>
       )})
@@ -214,7 +213,6 @@ logOut(url) {
                 <th>item link</th>
                 <th>revision</th>
                 <th>unique name</th>
-                <th>url</th>
                 <th>delete</th>
               </tr>
             </thead>
