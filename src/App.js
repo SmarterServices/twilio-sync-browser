@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import 'whatwg-fetch';
+import JSONPretty from 'react-json-pretty';
 
 class App extends Component {
   constructor() {
@@ -101,16 +102,20 @@ class App extends Component {
   render() {
     var items = this.state.items
     var details = this.state.details;
+    var detailsObject = {};
     var arr = details.map((x) => {
       for(var i in x) {
+        if(x[i]) {
+          detailsObject[i] = JSON.parse(x[i]);
+        }
         return(<p>{i}:{x[i] ? x[i].toString() : 'False'}</p>)
       }
     })
 
     if(arr.length === 0) {
-
       arr = <p>No items in this map</p>
-
+    } else {
+      arr = <JSONPretty id="json-pretty" json={detailsObject}></JSONPretty>
     }
 let urlMap = items.map(x => {
     return `https://preview.twilio.com/Sync/Services/${this.state.serviceId}/Maps/${x.unique_name}`
