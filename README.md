@@ -3,7 +3,8 @@ Sync ui
 Description: Super early and basic twilio sync ui to view your maps and delete them.
 
 Run 
-    
+
+    npm install    
     npm start
     Add username,password and serviceId
     Click the blue link to get the item details from a map(style will be added at some point down the road)
