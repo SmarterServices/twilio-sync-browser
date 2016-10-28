@@ -177,7 +177,7 @@ logOut(url) {
       shouldShowEdit = 'inline'
     }
     let urlMap = items.map(x => {
-      return `https://preview.twilio.com/Sync/Services/${this.state.serviceId}/Maps/${x.unique_name}`
+      return `https://preview.twilio.com/Sync/Services/${this.state.serviceId}/Maps/${x.sid}`
     });
     var shouldShowButton = (this.state.items.length === 0) ? 'none' : 'inline'
     let deleteAllButton = <button style={{color:'red', display: shouldShowButton}} onClick={this.deleteAll.bind(this,urlMap)}>delete all</button>
@@ -192,7 +192,7 @@ logOut(url) {
           </td>
           <td>{x.revision}</td>
           <td>{x.unique_name}</td>
-          <td><button style={{color:'red'}} onClick={this.deleteMap.bind(this,`https://preview.twilio.com/Sync/Services/${this.state.serviceId}/Maps/${x.unique_name}`)}>delete</button></td>
+          <td><button style={{color:'red'}} onClick={this.deleteMap.bind(this,`https://preview.twilio.com/Sync/Services/${this.state.serviceId}/Maps/${x.sid}`)}>delete</button></td>
         </tr>
       )})
 
